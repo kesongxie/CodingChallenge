@@ -75,12 +75,31 @@ def travel(x, y, path, visited):
         return success
     return False
 
-path = []
-visited = {}
-travel(3, 3, path, visited)
-print(path)
+# path = []
+# visited = {}
+# travel(3, 3, path, visited)
+# print(path)
 # what I Learnt: the path is not defined until there is one recursive call that leads to the
 # origin (0, 0). Since the question is asking for a path, stop recursive call once you find the origin.
 # As the function back track from the recursive call, it will lead to a path from the given (x, y) to the origin (0, 0)
 # if existed.
 
+
+# find the magic index in a sorted distinct integer array such that A[i] = i, for example [-3, 0, 2, 3, 7, 9], the magic
+# is 2, because A[2] = 2
+
+def getMagicIndex(start, end, A):
+    if start > end:
+        return -1
+    mid = math.floor((start + end)/2)
+    if A[mid] > mid:
+        return getMagicIndex(start, mid - 1, A)
+    elif A[mid] < mid:
+        return getMagicIndex(mid + 1, end, A)
+    else:
+        return mid
+
+A = [-3, 1, 4, 5, 7, 9]
+print(getMagicIndex(0, len(A) - 1, A))
+
+# FOLLOW UP: what if the array A is not distinct
