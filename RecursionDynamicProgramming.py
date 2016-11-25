@@ -88,18 +88,96 @@ def travel(x, y, path, visited):
 # find the magic index in a sorted distinct integer array such that A[i] = i, for example [-3, 0, 2, 3, 7, 9], the magic
 # is 2, because A[2] = 2
 
-def getMagicIndex(start, end, A):
-    if start > end:
+def getMagicIndex(start, end, a):
+    if start > end or start < 0 or end >= len(a):
         return -1
     mid = math.floor((start + end)/2)
-    if A[mid] > mid:
-        return getMagicIndex(start, mid - 1, A)
-    elif A[mid] < mid:
-        return getMagicIndex(mid + 1, end, A)
-    else:
+    midValue = a[mid]
+    if mid == midValue:
         return mid
+    elif midValue > mid:
+        return getMagicIndex(start, mid - 1, a)
+    else:
+        return getMagicIndex(mid + 1, end, a)
 
-A = [-3, 1, 4, 5, 7, 9]
-print(getMagicIndex(0, len(A) - 1, A))
+# A = [-3, 1, 4, 5, 7, 9]
+# print(getMagicIndex(0, len(A) - 1, A))
 
 # FOLLOW UP: what if the array A is not distinct
+def getMagicIndexUndistinct(start, end, a):
+    if start > end or start < 0 or end >= len(a):
+        return -1
+    mid = math.floor((start + end)/2)
+    midvalue = a[mid]
+
+    # search left
+    endIndex = min(midvalue, mid - 1)
+    leftFound = getMagicIndex(start, endIndex, a)
+    if leftFound >= 0:
+        return leftFound
+
+    # search right
+    startIndex = max(midvalue, mid + 1)
+    rightFound = getMagicIndex(startIndex, end, a)
+    return rightFound
+
+# A = [-3, 0, 4, 6, 6, 6, 6, 9]
+# print(getMagicIndexUndistinct(0, len(A) - 1, A))
+# what I learnt: since the sorted list is not distinct, we can't just compare
+# the mid index and the mid value to conclude which side to go.
+# We have to search both left and right in order to not to miss the magic number if it does exist
+# However, the left list and right list can be narrowed down if we know some information about the mid Value
+# we have to take good advantage of the fact the list is sorted.
+# It's always nice to
+
+
+# -------------------------------------------------------------------------------------------------- #
+
+
+def generateSubset(a,subset):
+    if len(a) == 0:
+        subset.append([])
+    else:
+        first = a[0]
+        generateSubset(a[1: len(a)], subset)
+        newSubSet = []
+        for ele in subset:
+            newEle = ele + [first]
+            newSubSet.append(newEle)
+        subset += newSubSet
+set = [3, 5, 1]
+subset = []
+generateSubset(set, subset)
+#print(subset)
+
+# what I learnt: we can first get the subset of all the elements(sub array) without the first element
+# for example -> for the original set [3, 5], get the subset of [5] , which is [ [], [5] ], then when we
+# next we add 3, for each element in [ [], [5] ], we append 3 to the element , which is [ [3], [5, 3] ]. then we will
+# just combine this two set together [ [], [5]] (this can be also viewed as a set without element 3)
+# with [ [3], [5, 3] ] (this can be also viewed as a set with element 3), then we will have the final result.
+# pay attention to the multiple dimension when doing appending
+
+
+# -------------------------------------------------------------------------------------------------- #
+def generatePermutation(string):
+    stringLength = len(string)
+    if stringLength == 0:
+        return []
+    elif stringLength == 1:
+        return [string[0]]
+    else:
+        result = []
+        firstChar = string[0]
+        permutations = generatePermutation(string[1: stringLength])
+        for permutate in permutations:
+            for i in range(0, len(permutate) + 1):
+                temp = permutate[:i] + firstChar + permutate[i:]
+                result.append(temp)
+        return result
+
+string = "hol"
+print(len(generatePermutation(string)))
+
+# what I learnt: break into sub problem. for "hol", generate the permutation for ol first, which is
+# [ol, lo], then for each element in that sub-permutation, insert to any possible position of the element to complete
+# the permutation of the original ol -> [hol, ohl, loh], and lo -> [hlo, lho, loh] with a nested loops
