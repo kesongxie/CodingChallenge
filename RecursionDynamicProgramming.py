@@ -145,9 +145,9 @@ def generateSubset(a,subset):
             newEle = ele + [first]
             newSubSet.append(newEle)
         subset += newSubSet
-set = [3, 5, 1]
+mySet = [3, 5, 1]
 subset = []
-generateSubset(set, subset)
+generateSubset(mySet, subset)
 #print(subset)
 
 # what I learnt: we can first get the subset of all the elements(sub array) without the first element
@@ -176,8 +176,25 @@ def generatePermutation(string):
         return result
 
 string = "hol"
-print(len(generatePermutation(string)))
+#print(len(generatePermutation(string)))
 
 # what I learnt: break into sub problem. for "hol", generate the permutation for ol first, which is
 # [ol, lo], then for each element in that sub-permutation, insert to any possible position of the element to complete
 # the permutation of the original ol -> [hol, ohl, loh], and lo -> [hlo, lho, loh] with a nested loops
+
+
+def getParen(n):
+    if n == 0:
+        return []
+    elif n == 1:
+        return ["[]"]
+    else:
+        result = []
+        paren = "[]"
+        for par in getParen(n - 1):
+            for i in range(0, len(par)):
+                temp = par[:i] + paren + par[i:]
+                result.append(temp)
+        return set(result)
+
+print(getParen(3))
